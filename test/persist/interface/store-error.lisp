@@ -7,8 +7,7 @@
   (state (coerce (vector 0 1 1 2 3 5 8) '(vector (unsigned-byte 8))))
   (reason "Reason")
   (inner-error (make-condition 'file-error
-                               :pathname #P"/no/such/file"))
-  )
+                               :pathname #P"/no/such/file")))
 
 (nst:def-test-group store-error-tests (store-error-fixture)
   (nst:def-test store-error-extends-error (:values (:equal t)
@@ -76,5 +75,4 @@
                     :store store
                     :bytes state
                     :reason reason
-                    :inner-error "file not found"))
-  )
+                    :inner-error "file not found")))

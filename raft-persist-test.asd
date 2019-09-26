@@ -11,4 +11,6 @@
   ((:module "test/persist/interface"
     :components ((:file "package")
                  (:file "store-error" :depends-on ("package"))
+                 (:file "store-state-error" :depends-on ("package"
+                                                         "store-error"))
                  (:file "run" :depends-on ("package"))))))
