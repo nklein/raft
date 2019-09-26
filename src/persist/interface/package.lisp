@@ -14,4 +14,6 @@
   (:export #:store-state-error)
   ;; exports from store-log-entry-error
   (:export #:store-log-entry-error
-           #:store-log-entry-error-index))
+           #:store-log-entry-error-index)
+  ;; exports from clear-error
+  (:export #:clear-error))

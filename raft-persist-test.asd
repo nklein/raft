@@ -19,4 +19,6 @@
                  (:file "store-log-entry-error" :depends-on ("package"
                                                              "persist-error"
                                                              "store-error"))
+                 (:file "clear-error" :depends-on ("package"
+                                                   "persist-error"))
                  (:file "run" :depends-on ("package"))))))
