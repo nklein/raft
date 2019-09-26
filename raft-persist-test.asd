@@ -13,4 +13,6 @@
                  (:file "store-error" :depends-on ("package"))
                  (:file "store-state-error" :depends-on ("package"
                                                          "store-error"))
+                 (:file "store-log-entry-error" :depends-on ("package"
+                                                             "store-error"))
                  (:file "run" :depends-on ("package"))))))

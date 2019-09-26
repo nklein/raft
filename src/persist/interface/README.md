@@ -58,6 +58,6 @@ The `store-state-error` adds nothing to this base error condition:
 The `store-log-entry-error` adds the log entry's index to the base error condition:
 
     (define-condition store-log-entry-error (store-error)
-     ((index :reader store-log-entry-index
+     ((index :reader store-log-entry-error-index
              :initarg :index
              :type (integer 0))

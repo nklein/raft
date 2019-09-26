@@ -16,4 +16,7 @@ to store its persistent state."
                  (:file "package")
                  (:file "store-error" :depends-on ("package"))
                  (:file "store-state-error" :depends-on ("package"
-                                                         "store-error"))))))
+                                                         "store-error"))
+                 (:file "store-log-entry-error"
+                        :depends-on ("package"
+                                     "store-error"))))))

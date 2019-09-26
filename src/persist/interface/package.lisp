@@ -9,4 +9,7 @@
            #:store-error-reason
            #:store-error-inner-error)
   ;; exports from store-state-error
-  (:export #:store-state-error))
+  (:export #:store-state-error)
+  ;; exports from store-log-entry-error
+  (:export #:store-log-entry-error
+           #:store-log-entry-error-index))
