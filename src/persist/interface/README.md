@@ -22,8 +22,8 @@ To satisfy Raft's needs, the persistent storage instance must implement the foll
 
     (defgeneric clear (store)) ; => Nothing
 
-The `index` values above are non-negative integers.
-The `bytes` values above are opaque vector of bytes.
+The `index` values above are positive integers.
+The `bytes` values above are opaque vectors of bytes.
 
 A call to `store-state` should store the given bytes for later retrieval.
 This call must either succeed or raise an error of type `store-state-error`.
@@ -69,7 +69,7 @@ The `store-log-entry-error` adds the log entry's index to the base error conditi
     (define-condition store-log-entry-error (store-error)
      ((index :reader store-log-entry-error-index
              :initarg :index
-             :type (integer 0))
+             :type (integer 1))
 
 The `clear-error` referenced above adds nothing to the base error.
 

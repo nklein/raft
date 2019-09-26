@@ -3,8 +3,7 @@
 (in-package #:raft-persist-test)
 
 (nst:def-fixtures store-log-entry-error-fixture ()
-  (log0 (coerce (vector 0 1 2 3 4 5 6 7) '(vector (unsigned-byte 8))))
-  (log1 (coerce (vector 0 1 2 4 8 16 32) '(vector (unsigned-byte 8)))))
+  (log1 (coerce (vector 0 1 2 3 4 5 6 7) '(vector (unsigned-byte 8)))))
 
 (nst:def-test-group store-log-entry-error-tests (persist-error-fixture
                                                  store-error-fixture
@@ -16,23 +15,23 @@
   (nst:def-test store-log-entry-error-has-slot-for-index (:true)
     (make-condition 'store-log-entry-error
                     :store store
-                    :bytes log0
+                    :bytes log1
+                    :reason reason
+                    :inner-error inner-error
+                    :index 1))
+
+  (nst:def-test store-log-entry-error-requires-index-to-be-positive (:err)
+    (make-condition 'store-log-entry-error
+                    :store store
+                    :bytes log1
                     :reason reason
                     :inner-error inner-error
                     :index 0))
 
-  (nst:def-test store-log-entry-error-requires-index-to-be-nonnegative (:err)
-    (make-condition 'store-log-entry-error
-                    :store store
-                    :bytes log0
-                    :reason reason
-                    :inner-error inner-error
-                    :index -1))
-
-  (nst:def-test store-error-has-reader-for-index (:equal 0)
+  (nst:def-test store-error-has-reader-for-index (:equal 1)
     (store-log-entry-error-index (make-condition 'store-log-entry-error
                                                  :store store
-                                                 :bytes log0
+                                                 :bytes log1
                                                  :reason reason
                                                  :inner-error inner-error
-                                                 :index 0))))
+                                                 :index 1))))

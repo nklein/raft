@@ -5,7 +5,7 @@
 (define-condition store-log-entry-error (store-error)
   ((index :reader store-log-entry-error-index
           :initarg :index
-          :type (integer 0))))
+          :type (integer 1))))
 
 (defmethod print-object ((err store-log-entry-error) stream)
   (cond
