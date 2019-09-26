@@ -24,4 +24,5 @@ to store its persistent state."
                                                              "persist-error"
                                                              "store-error"))
                  (:file "clear-error" :depends-on ("package"
-                                                   "persist-error"))))))
+                                                   "persist-error"))
+                 (:file "generics" :depends-on ("package"))))))

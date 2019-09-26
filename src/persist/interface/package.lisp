@@ -16,4 +16,10 @@
   (:export #:store-log-entry-error
            #:store-log-entry-error-index)
   ;; exports from clear-error
-  (:export #:clear-error))
+  (:export #:clear-error)
+  ;; exports from generics
+  (:export #:store-state
+           #:retrieve-state
+           #:store-log-entry
+           #:retrieve-log-entry
+           #:clear))

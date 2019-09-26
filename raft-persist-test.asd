@@ -21,4 +21,5 @@
                                                              "store-error"))
                  (:file "clear-error" :depends-on ("package"
                                                    "persist-error"))
+                 (:file "generics" :depends-on ("package"))
                  (:file "run" :depends-on ("package"))))))
