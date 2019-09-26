@@ -7,7 +7,7 @@
           :initarg :index
           :type (integer 0))))
 
-(defmethod print-object ((err store-error) stream)
+(defmethod print-object ((err store-log-entry-error) stream)
   (cond
     ((or *print-escape*
          *print-readably*)

@@ -2,7 +2,8 @@
 
 (in-package #:raft-persist-test)
 
-(nst:def-test-group store-state-error-tests (store-error-fixture)
+(nst:def-test-group store-state-error-tests (persist-error-fixture
+                                             store-error-fixture)
   (nst:def-test store-state-error-extends-store-error (:values (:equal t)
                                                                (:equal t))
     (subtypep 'store-state-error 'store-error))

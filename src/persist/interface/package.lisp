@@ -2,12 +2,14 @@
 
 (defpackage #:raft-persist
   (:use #:cl)
+  ;; exports from persist-error
+  (:export #:persist-error
+           #:persist-error-store
+           #:persist-error-reason
+           #:persist-error-inner-error)
   ;; exports from store-error
   (:export #:store-error
-           #:store-error-store
-           #:store-error-bytes
-           #:store-error-reason
-           #:store-error-inner-error)
+           #:store-error-bytes)
   ;; exports from store-state-error
   (:export #:store-state-error)
   ;; exports from store-log-entry-error

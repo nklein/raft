@@ -6,7 +6,8 @@
   (log0 (coerce (vector 0 1 2 3 4 5 6 7) '(vector (unsigned-byte 8))))
   (log1 (coerce (vector 0 1 2 4 8 16 32) '(vector (unsigned-byte 8)))))
 
-(nst:def-test-group store-log-entry-error-tests (store-error-fixture
+(nst:def-test-group store-log-entry-error-tests (persist-error-fixture
+                                                 store-error-fixture
                                                  store-log-entry-error-fixture)
   (nst:def-test store-log-entry-error-extends-store-error (:values (:equal t)
                                                                    (:equal t))

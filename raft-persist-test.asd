@@ -10,9 +10,13 @@
   :components
   ((:module "test/persist/interface"
     :components ((:file "package")
-                 (:file "store-error" :depends-on ("package"))
+                 (:file "persist-error" :depends-on ("package"))
+                 (:file "store-error" :depends-on ("package"
+                                                   "persist-error"))
                  (:file "store-state-error" :depends-on ("package"
+                                                         "persist-error"
                                                          "store-error"))
                  (:file "store-log-entry-error" :depends-on ("package"
+                                                             "persist-error"
                                                              "store-error"))
                  (:file "run" :depends-on ("package"))))))
