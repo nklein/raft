@@ -18,4 +18,12 @@ to store its persistent state."
                  (:file "creation" :depends-on ("package"))
                  (:file "state" :depends-on ("package"
                                              "creation"
+                                             "backup-utils"))
+                 (:file "log-entry" :depends-on ("package"
+                                                 "creation"
+                                                 "backup-utils"))
+                 (:file "clear" :depends-on ("package"
+                                             "creation"
+                                             "state"
+                                             "log-entry"
                                              "backup-utils"))))))

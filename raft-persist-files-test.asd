@@ -13,4 +13,10 @@
                  (:file "creation" :depends-on ("package"))
                  (:file "state" :depends-on ("package"
                                              "creation"))
+                 (:file "log-entry" :depends-on ("package"
+                                                 "creation"))
+                 (:file "clear" :depends-on ("package"
+                                             "creation"
+                                             "state"
+                                             "log-entry"))
                  (:file "run" :depends-on ("package"))))))

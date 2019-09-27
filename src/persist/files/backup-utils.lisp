@@ -49,3 +49,10 @@
                 (try-file ,real))
                (t
                 (error ,err)))))))))
+
+
+(defun delete-backup-file (pathname)
+  (ignore-errors
+    (delete-file (real-name pathname)))
+  (ignore-errors
+    (delete-file (backup-name pathname))))
