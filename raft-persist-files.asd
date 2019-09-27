@@ -4,7 +4,7 @@
   :description "Defines the interface needed for the RAFT package
 to store its persistent state."
   :author "Patrick Stein <pat@nklein.com>"
-  :version "0.1.20190929"
+  :version "0.1.20190926"
   :license "UNLICENSE"
   :depends-on (#:raft-persist)
   :in-order-to ((asdf:test-op (asdf:load-op :raft-persist-files-test)))
