@@ -75,3 +75,40 @@ The `clear-error` referenced above adds nothing to the base error.
 
     (define-condition clear-error (persist-error)
      ())
+
+Example
+-------
+
+As an example, if one were using a database to maintain the state, one could use a table like:
+
+    CREATE TABLE IF NOT EXISTS `raft-data` (
+        `context-id` UUID NOT NULL,
+        `index` NUMERIC NOT NULL CHECK (0 <= `index`),
+        `bytes` BYTEA NOT NULL,
+
+        PRIMARY KEY (`context-id`, `index`)
+    )
+
+Then, the `store-state` and `retrieve-state` methods could use the special index 0 for the state and be implemented as:
+
+    (defmethod store-state (store bytes)
+      (store-log-entry store 0 bytes))
+
+    (defmethod retrieve-state (store)
+      (retrieve-log-entry store 0)
+
+The `store-log-entry` method would do:
+
+    DELETE FROM `raft-data`
+        WHERE `context-id` = :cid AND `index` = :index
+
+    INSERT INTO `raft-data` VALUES ( :cid, :index, :bytes )
+
+While the `retrieve-log-entry` method would do:
+
+    SELECT `bytes` FROM `raft-data`
+        WHERE `context-id` = :cid AND `index` = :index
+
+The `clear` method would do:
+
+    DELETE FROM `raft-data` WHERE `context-id` = :cid
