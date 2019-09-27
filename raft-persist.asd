@@ -6,7 +6,7 @@ to store its persistent state."
   :author "Patrick Stein <pat@nklein.com>"
   :version "0.1.20190929"
   :license "UNLICENSE"
-  :depends-on (#:interface)
+  :depends-on ()
   :in-order-to ((asdf:test-op (asdf:load-op :raft-persist-test)))
   :perform (asdf:test-op (o c)
              (uiop:symbol-call :raft-persist-test :run-all-tests))
