@@ -2,4 +2,4 @@
 
 (in-package #:raft-update)
 
-(defgeneric update (store bytes))
+(defgeneric update (updater bytes))
