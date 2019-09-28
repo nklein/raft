@@ -2,8 +2,11 @@
 
 (in-package #:raft-test)
 
-(defun make-communicate-helper ()
-  :comms)
+(let ((lock (bt:make-lock "MAKE-COMMUNICATE-HELPER LOCK"))
+      (helper-number 0))
+  (defun make-communicate-helper ()
+    (bt:with-lock-held (lock)
+      (incf helper-number))))
 
-(defmethod send-to-peer ((sender keyword) peer-handle bytes)
+(defmethod send-to-peer ((sender integer) peer-handle bytes)
   (enqueue bytes (inbox peer-handle)))

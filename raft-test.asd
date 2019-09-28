@@ -6,6 +6,7 @@
   :version "0.1.20190927"
   :license "UNLICENSE"
   :depends-on ((:version #:raft "0.1.20190927")
+               #:bordeaux-threads
                #:jpl-queues
                #:trivial-utf-8
                #:nst)
