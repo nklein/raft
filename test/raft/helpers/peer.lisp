@@ -22,26 +22,20 @@
        (bt:with-lock-held ((lock ,p))
          ,@body))))
 
-(let ((lock (bt:make-lock "MAKE-PEER LOCK"))
-      (peers (make-hash-table :test 'eql)))
-
-  (defun get-peer (id)
-    (bt:with-lock-held (lock)
-      (gethash id peers)))
-
-  (defun (setf get-peer) (peer id)
-    (bt:with-lock-held (lock)
-      (setf (gethash id peers) peer))))
-
-(defun make-peer ()
+(defun make-peer (id)
   (let* ((persist (make-persist-helper))
          (update (make-update-helper))
-         (communicate (make-communicate-helper))
+         (communicate (make-communicate-helper id))
          (id communicate)
          (lock (bt:make-lock (format nil "PEER ~A LOCK" id)))
-         (server (make-raft-server :persist-instance persist
+         (election-timeout +minimum-election-timeout+)
+         (broadcast-timeout (/ election-timeout 5))
+         (server (make-raft-server id
+                                   :persist-instance persist
                                    :update-instance update
-                                   :communicate-instance communicate))
+                                   :communicate-instance communicate
+                                   :election-timeout election-timeout
+                                   :broadcast-timeout broadcast-timeout))
          (queue (make-instance 'unbounded-fifo-queue))
          (inbox (make-instance 'synchronized-queue :queue queue))
          (semaphore (bt:make-semaphore :name (format nil "PEER ~A SEMAPHORE"
@@ -71,15 +65,9 @@
     (bt:join-thread (with-peer-locked (peer)
                       (thread peer)))))
 
-(defun process-msg (peer msg)
-  (declare (ignore peer msg)))
-
 (defun process-all-messages (peer)
+  (process-timers (server peer))
   (loop :while (bt:wait-on-semaphore (semaphore peer) :timeout 0.5)
-     :for msg := (dequeue (inbox peer))
-     :do (process-msg peer msg))
+     :for (from . msg) := (dequeue (inbox peer))
+     :do (process-msg (server peer) from msg))
   (values))
-
-(defun leaderp (peer)
-  (declare (ignore peer))
-  nil)

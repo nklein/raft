@@ -2,12 +2,21 @@
 
 (in-package #:raft-test)
 
-(let ((lock (bt:make-lock "MAKE-COMMUNICATE-HELPER LOCK"))
-      (helper-number 0))
-  (defun make-communicate-helper ()
+(let ((lock (bt:make-lock "MAKE-PEER LOCK"))
+      (peers (make-hash-table :test 'eql)))
+
+  (defun get-peer (id)
     (bt:with-lock-held (lock)
-      (incf helper-number))))
+      (gethash id peers)))
+
+  (defun (setf get-peer) (peer id)
+    (bt:with-lock-held (lock)
+      (setf (gethash id peers) peer))))
+
+(defun make-communicate-helper (id)
+  id)
 
 (defmethod send-to-peer ((sender integer) peer-handle bytes)
-  (enqueue (cons sender bytes) (inbox peer-handle))
+  (let ((peer (get-peer peer-handle)))
+    (enqueue (cons sender bytes) (inbox peer)))
   (bt:signal-semaphore (semaphore peer-handle)))

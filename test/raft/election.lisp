@@ -8,8 +8,8 @@
   )
 
 (defun prepare-peers (n server-loop)
-  (let ((peers (loop :repeat n
-                  :for peer := (make-peer)
+  (let ((peers (loop :for id :from 1 :to n
+                  :for peer := (make-peer id)
                   :collecting peer)))
     (loop :for peer :in peers
        :do (setf (peers (server peer)) (remove peer peers))
@@ -28,7 +28,7 @@
                (loop :while (with-peer-locked (peer)
                               (runningp peer))
                   :do (process-all-messages peer)
-                  :when (leaderp peer)
+                  :when (leaderp (server peer))
                   :do (bt:signal-semaphore election-complete))))
         (let ((peers (prepare-peers 5 #'server-loop)))
           (unwind-protect
