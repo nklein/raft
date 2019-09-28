@@ -13,7 +13,7 @@
 
 (defclass raft-server ()
   ((id :reader id
-       :initarg id)
+       :initarg :id)
    (persist :reader %persist
             :initarg :persist)
    (update :reader %update
@@ -77,6 +77,7 @@
   (assert (<= +minimum-election-timeout+ election-timeout))
   (assert (<= (* 3 broadcast-timeout) election-timeout))
   (make-instance 'raft-server
+                 :id id
                  :persist persist-instance
                  :update update-instance
                  :communicate communicate-instance

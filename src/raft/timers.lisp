@@ -7,10 +7,10 @@
 
 (defun last-log-msg (raft)
   (let* ((logs (logs raft))
-         (index (1- (array-dimension logs 0))))
+         (index (array-dimension logs 0)))
     (values index
-            (unless (minusp index)
-              (aref logs index)))))
+            (when (plusp index)
+              (aref logs (1- index))))))
 
 (defun log-msg (term command)
   (list (make-log-msg-term term)
@@ -25,8 +25,9 @@
   (multiple-value-bind (index log-msg) (last-log-msg raft)
     (let* ((msg (request-vote-msg (current-term raft)
                                   (id raft)
-                                  index
-                                  (log-msg-term log-msg)))
+                                  (or index 0)
+                                  (or (log-msg-term log-msg)
+                                      0)))
            (encoded-msg (encode-message :request-vote msg)))
       (send-to-peers raft encoded-msg)))
   (values))
