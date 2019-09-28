@@ -26,7 +26,6 @@
   (let* ((persist (make-persist-helper))
          (update (make-update-helper))
          (communicate (make-communicate-helper id))
-         (id communicate)
          (lock (bt:make-lock (format nil "PEER ~A LOCK" id)))
          (election-timeout +minimum-election-timeout+)
          (broadcast-timeout (/ election-timeout 5))
@@ -56,7 +55,8 @@
                                             (setf (runningp peer) t))
                                           (funcall server-loop peer))
                                         :name (format nil "PEER ~A THREAD"
-                                                      (id peer))))))
+                                                      (raft-id
+                                                       (server peer)))))))
 
 (defun stop (peer)
   (when (runningp peer)

@@ -18,5 +18,5 @@
 
 (defmethod send-to-peer ((sender integer) peer-handle bytes)
   (let ((peer (get-peer peer-handle)))
-    (enqueue (cons sender bytes) (inbox peer)))
-  (bt:signal-semaphore (semaphore peer-handle)))
+    (enqueue (cons sender bytes) (inbox peer))
+    (bt:signal-semaphore (semaphore peer))))

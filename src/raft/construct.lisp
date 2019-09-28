@@ -12,8 +12,8 @@
      ,@body))
 
 (defclass raft-server ()
-  ((id :reader id
-       :initarg :id)
+  ((id :reader raft-id
+       :initarg :raft-id)
    (persist :reader %persist
             :initarg :persist)
    (update :reader %update
@@ -48,7 +48,7 @@
 (defmethod initialize-instance :after ((raft raft-server)
                                        &key &allow-other-keys)
   ;; prepare the lock
-  (setf (lock raft) (bt:make-lock (format nil "RAFT ~A LOCK" (id raft))))
+  (setf (lock raft) (bt:make-lock (format nil "RAFT ~A LOCK" (raft-id raft))))
 
   ;; start the timers to expire randomly within the next broadcast-timeout
   (let ((starting-at (now))
@@ -77,7 +77,7 @@
   (assert (<= +minimum-election-timeout+ election-timeout))
   (assert (<= (* 3 broadcast-timeout) election-timeout))
   (make-instance 'raft-server
-                 :id id
+                 :raft-id id
                  :persist persist-instance
                  :update update-instance
                  :communicate communicate-instance

@@ -2,17 +2,15 @@
 
 (in-package #:raft-test)
 
-(defun (setf peers) (peers server)
-  (declare (ignore peers server))
-  ;; TODO: replace with real method in RAFT package
-  )
-
 (defun prepare-peers (n server-loop)
   (let ((peers (loop :for id :from 1 :to n
                   :for peer := (make-peer id)
                   :collecting peer)))
     (loop :for peer :in peers
-       :do (setf (peers (server peer)) (remove peer peers))
+       :do (setf (peers (server peer))
+                 (mapcar (lambda (p)
+                           (raft-id (server peer)))
+                         (remove peer peers)))
        :do (start peer server-loop))
     peers))
 

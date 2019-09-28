@@ -24,7 +24,7 @@
 (defun request-vote (raft)
   (multiple-value-bind (index log-msg) (last-log-msg raft)
     (let* ((msg (request-vote-msg (current-term raft)
-                                  (id raft)
+                                  (raft-id raft)
                                   (or index 0)
                                   (or (log-msg-term log-msg)
                                       0)))
