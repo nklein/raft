@@ -9,4 +9,5 @@
       (incf helper-number))))
 
 (defmethod send-to-peer ((sender integer) peer-handle bytes)
-  (enqueue bytes (inbox peer-handle)))
+  (enqueue (cons sender bytes) (inbox peer-handle))
+  (bt:signal-semaphore (semaphore peer-handle)))

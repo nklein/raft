@@ -23,4 +23,7 @@
                   :depends-on ("package"))
                  (:file "construct" :depends-on ("package"
                                                  "helpers"))
+                 (:file "election" :depends-on ("package"
+                                                "helpers"
+                                                "construct"))
                  (:file "run" :depends-on ("package"))))))

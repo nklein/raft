@@ -6,7 +6,7 @@
   (make-hash-table :test 'eql))
 
 (defun make-log-entry (cmd name value)
-  (check-type cmd (member :+ :- := :quit))
+  (check-type cmd (member :+ :- :=))
   (check-type name keyword)
   (check-type value integer)
   (string-to-utf-8-bytes
@@ -30,9 +30,7 @@
            (decf (gethash name updater 0) value))
           (:=
            (check-type value integer)
-           (setf (gethash name updater) value))
-          (:quit
-           (throw 'quit-thread t))))))
+           (setf (gethash name updater) value))))))
   (values))
 
 (defun get-shared-state (updater name &optional default)
