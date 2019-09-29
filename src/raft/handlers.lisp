@@ -10,7 +10,7 @@
                             0)))
       (or (< our-log-term other-log-term)
           (and (= our-log-term other-log-term)
-               (< our-log-index other-log-index))))))
+               (<= our-log-index other-log-index))))))
 
 (defmethod handle-message ((raft raft-server)
                            peer-handle
@@ -34,7 +34,8 @@
                                   (request-vote-response term vote-granted)))
     (when vote-granted
       (setf (voted-for raft) candidate-id
-            (current-term raft) term))))
+            (current-term raft) term)
+      (reset-election-timer raft))))
 
 (defmethod handle-message ((raft raft-server)
                            peer-handle
@@ -47,6 +48,6 @@
   (let ((term (request-vote-term msg))
         (vote-granted (request-vote-vote-granted msg)))
     (when (and vote-granted
-               (= term (current-term raft))
-               (zerop (decf (votes-needed raft))))
-      (become-leader raft (now)))))
+               (= term (current-term raft)))
+      (when (zerop (decf (votes-needed raft)))
+        (become-leader raft (now))))))

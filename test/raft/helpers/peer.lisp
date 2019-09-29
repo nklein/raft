@@ -67,8 +67,15 @@
 
 (defun process-all-messages (peer)
   (loop
-     :for timeout := (process-timers (server peer))
-     :while (bt:wait-on-semaphore (semaphore peer) :timeout timeout)
-     :for (from . msg) := (dequeue (inbox peer))
-     :do (process-msg (server peer) from msg))
+     :with semaphore := (with-peer-locked (peer)
+                          (semaphore peer))
+     :for timeout := (with-peer-locked (peer)
+                       (process-timers (server peer)))
+     :while (bt:wait-on-semaphore semaphore :timeout timeout)
+     :for (from . msg) := (with-peer-locked (peer)
+                            (dequeue (inbox peer)))
+     :do (process-msg (with-peer-locked (peer)
+                        (server peer))
+                      from
+                      msg))
   (values))

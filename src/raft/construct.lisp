@@ -76,10 +76,8 @@
   ;; start the election timer to expire randomly within
   ;; the next broadcast-timeout
   (let ((starting-at (now))
-        (election-timeout (election-timeout raft))
         (broadcast-timeout (broadcast-timeout raft)))
-    (setf (election-expires raft) (deadline (- (random broadcast-timeout)
-                                               election-timeout)
+    (setf (election-expires raft) (deadline (random broadcast-timeout)
                                             starting-at)
           (broadcast-expires raft) (deadline (- broadcast-timeout)
                                              starting-at))))
