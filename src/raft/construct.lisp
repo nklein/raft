@@ -87,7 +87,7 @@
                            persist-instance
                            update-instance
                            communicate-instance
-                           (election-timeout 10)
+                           (election-timeout 4)
                            (broadcast-timeout 1))
   (assert id)
   (check-type persist-instance (not null))
