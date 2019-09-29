@@ -2,16 +2,13 @@
 
 (in-package #:raft-test)
 
-(defmethod raft-id ((p peer))
-  (raft-id (server p)))
-
 (defun prepare-peers (n server-loop)
   (let ((peers (loop :for id :from 1 :to n
                   :for peer := (make-peer id)
                   :collecting peer)))
     (loop :for peer :in peers
-       :do (setf (peers (server peer))
-                 (mapcar #'raft-id (remove peer peers)))
+       :do (setf (raft::peers (server peer))
+                 (mapcar #'id (remove peer peers)))
        :do (start peer server-loop))
     peers))
 
@@ -26,8 +23,9 @@
              (loop :while (with-peer-locked (peer)
                             (runningp peer))
                 :do (process-all-messages peer)
-                :do (when (with-peer-locked (peer)
-                            (leaderp (server peer)))
+                :do (when (eql (with-peer-locked (peer)
+                                 (raft::role (server peer)))
+                               :leader)
                       (bt:signal-semaphore election-complete)))))
       (let ((peers (prepare-peers peer-count #'server-loop)))
         (unwind-protect

@@ -8,12 +8,7 @@
         #:cl)
   ;; from construct
   (:export #:+minimum-election-timeout+
-           #:make-raft-server
-           #:raft-id
-           #:peers)
+           #:make-raft-server)
   ;; from public
-  (:export #:leaderp
-           #:followerp
-           #:candidatep
-           #:process-timers
+  (:export #:process-timers
            #:process-msg))

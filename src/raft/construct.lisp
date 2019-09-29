@@ -46,6 +46,10 @@
                       :initarg :broadcast-timeout)
    (broadcast-expires :accessor broadcast-expires)))
 
+(declaim (inline leaderp))
+(defun leaderp (raft)
+  (eql (role raft) :leader))
+
 (defun reset-election-timer (raft &optional (starting-at (now)))
   (with-raft-locked (raft)
     (let ((election-timeout (election-timeout raft))
@@ -63,7 +67,7 @@
   (flet ((to-seconds (ticks)
            (/ (* 1.0 (max ticks 0.0)) internal-time-units-per-second)))
     (with-raft-locked (raft)
-      (to-seconds (- (if (eql (role raft) :leader)
+      (to-seconds (- (if (leaderp raft)
                          (broadcast-expires raft)
                          (election-expires raft))
                      now)))))

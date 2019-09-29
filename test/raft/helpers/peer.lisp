@@ -55,8 +55,7 @@
                                             (setf (runningp peer) t))
                                           (funcall server-loop peer))
                                         :name (format nil "PEER ~A THREAD"
-                                                      (raft-id
-                                                       (server peer)))))))
+                                                      (id peer))))))
 
 (defun stop (peer)
   (when (runningp peer)

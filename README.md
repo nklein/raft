@@ -58,25 +58,6 @@ This must be a third as long as the `election-timeout` or less.
 State updates happen with heartbeat messages.
 As such, the longer this is, the longer some clients will stay out of date.
 
-Querying the Raft Server and Its Peers
---------------------------------------
-
-    (raft-id server) => the id used to construct the server
-    (peers server) => the list of peers (setf-able, at the moment)
-
-?? DEPRECATE -- only needed for `raft-id` for tests? and need to restrict when `peers` can be changed.
-
-Querying the Raft Server Role
------------------------------
-
-The following methods check whether the server is currently acting in the specified role:
-
-    (leaderp server) => is the group leader
-    (followerp server) => is following an active group leader
-    (candidatep server) => is trying to get elected as group leader
-
-?? DEPRECATE -- only needed for tests?
-
 Handling Timers and Messages For The Raft Server
 ------------------------------------------------
 
