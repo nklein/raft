@@ -4,6 +4,11 @@ RAFT-COMMUNICATE package
 Raft needs to exchange messages with its peers.
 This package defines the interface the server will use to send a message to a given peer.
 
+Supported implementations of this interface:
+* [`raft-communicate-chanl`][rcc]
+
+[rcc]: https://github.com/nklein/raft-communicate-chanl
+
 Interface Methods
 -----------------
 
@@ -18,7 +23,7 @@ The `bytes` value above in an opaque vector of bytes.
 Example
 -------
 
-If, for example, the `sender` is a datagram socket and the `peer-handle` is a cons, then this method could be implemented as:
+If, for example, the `sender` is a datagram socket and the `peer-handle` is a cons of the hostname and port of the peer, then this method could be implemented as:
 
     (defmethod update ((sender usocket:datagram-usocket) peer-handle bytes)
       (usocket:socket-send sender bytes (length bytes)

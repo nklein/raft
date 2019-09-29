@@ -8,6 +8,11 @@ The persistent data that Raft needs to store is divided between internal state a
 There is a single piece of persistent data for internal state.
 There is an ordered list of pieces of persistent data for log entries.
 
+Supported implementations of this interface:
+* [`raft-persist-files`][rpf]
+
+[rpf]: https://github.com/nklein/raft-persist-files
+
 
 Interface Methods
 -----------------
