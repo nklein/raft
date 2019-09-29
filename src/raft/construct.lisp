@@ -89,7 +89,13 @@
                            communicate-instance
                            (election-timeout 4)
                            (broadcast-timeout 1))
-  (assert id)
+  (assert (equalp id
+                  (let ((str (with-output-to-string (out)
+                               (with-standard-io-syntax
+                                 (write id :stream out)))))
+                    (with-input-from-string (in str)
+                      (with-standard-io-syntax
+                        (read in))))))
   (check-type persist-instance (not null))
   (check-type update-instance (not null))
   (check-type communicate-instance (not null))

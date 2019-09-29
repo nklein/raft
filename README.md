@@ -41,6 +41,7 @@ To create a Raft server instance, one uses the following method:
 The `id` is a unique identifier for this server.
 This value is used in communications with the server's peers.
 This value must be printable and readable under `with-standard-io-syntax`.
+Furthermore, the `id` must be `equalp` to a printed and read copy of itself.
 
 The `persist-instance` is required and must implement the [`raft-persist`][rp-api] interface.
 
