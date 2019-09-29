@@ -13,5 +13,7 @@
            #:peers)
   ;; from public
   (:export #:leaderp
+           #:followerp
+           #:candidatep
            #:process-timers
            #:process-msg))

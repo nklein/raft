@@ -2,20 +2,27 @@
 
 (in-package #:raft)
 
-(defun leaderp (raft)
-  (with-raft-locked (raft)
-    (eql (role raft) :leader)))
+(defmacro define-role-predicate (name (tag))
+  `(defun ,name (raft)
+     (with-raft-locked (raft)
+       (eql (role raft) ,tag))))
+
+(define-role-predicate leaderp (:leader))
+(define-role-predicate followerp (:follower))
+(define-role-predicate candidatep (:candidate))
 
 (defun process-timers (raft)
   (check-type raft raft-server)
   (let ((now (now)))
-    (when (< (election-expires raft) now)
+    (when (and (not (leaderp raft))
+               (< (election-expires raft) now))
       (with-raft-locked (raft)
-        (request-vote raft)))
+        (become-candidate raft now)))
     (when (and (leaderp raft)
                (< (broadcast-expires raft) now))
       (with-raft-locked (raft)
-        (append-entries raft)))))
+        (append-entries raft now)))
+    (seconds-until-next-timer raft now)))
 
 (defun process-msg (raft peer-handle encoded-msg)
   (check-type raft raft-server)

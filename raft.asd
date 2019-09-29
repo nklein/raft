@@ -10,6 +10,7 @@ For more details on the RAFT algorithm, see: https://raft.github.io/"
   :depends-on ((:version #:raft-persist "0.1.20190926")
                (:version #:raft-update "0.1.20190927")
                (:version #:raft-communicate "0.1.20190927")
+               #:bordeaux-threads
                #:trivial-utf-8)
   :in-order-to ((asdf:test-op (asdf:load-op :raft-test)))
   :perform (asdf:test-op (o c)
@@ -33,7 +34,8 @@ For more details on the RAFT algorithm, see: https://raft.github.io/"
                                               "rpc"))
                  (:file "handlers" :depends-on ("package"
                                                 "construct"
-                                                "rpc"))
+                                                "rpc"
+                                                "timers"))
                  (:file "public" :depends-on ("package"
                                               "time"
                                               "construct"

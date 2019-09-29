@@ -5,7 +5,7 @@
 (defconstant +minimum-election-timeout+ 0.1
   "The minimum number of seconds allowed for an election timeout")
 
-(deftype role-type () '(member :unassigned :candidate :leader :follower))
+(deftype role-type () '(member :candidate :leader :follower))
 
 (defmacro with-raft-locked ((raft) &body body)
   `(bt:with-lock-held ((lock ,raft))
@@ -32,10 +32,11 @@
    ;; private transient state
    (lock :accessor lock)
    (role :accessor role
-         :initform :unassigned
+         :initform :follower
          :type role-type)
    (peers :accessor peers
           :initform nil)
+   (votes-needed :accessor votes-needed)
 
    ;; private timeouts
    (election-timeout :reader election-timeout
@@ -45,20 +46,42 @@
                       :initarg :broadcast-timeout)
    (broadcast-expires :accessor broadcast-expires)))
 
+(defun reset-election-timer (raft &optional (starting-at (now)))
+  (with-raft-locked (raft)
+    (let ((election-timeout (election-timeout raft))
+          (broadcast-timeout (broadcast-timeout raft)))
+      (setf (election-expires raft) (deadline (+ election-timeout
+                                                 (random broadcast-timeout))
+                                              starting-at)))))
+
+(defun reset-broadcast-timer (raft &optional (starting-at (now)))
+  (with-raft-locked (raft)
+    (setf (broadcast-expires raft) (deadline (broadcast-timeout raft)
+                                             starting-at))))
+
+(defun seconds-until-next-timer (raft &optional (now (now)))
+  (flet ((to-seconds (ticks)
+           (/ (* 1.0 (max ticks 0.0)) internal-time-units-per-second)))
+    (with-raft-locked (raft)
+      (to-seconds (- (if (eql (role raft) :leader)
+                         (broadcast-expires raft)
+                         (election-expires raft))
+                     now)))))
+
 (defmethod initialize-instance :after ((raft raft-server)
                                        &key &allow-other-keys)
   ;; prepare the lock
   (setf (lock raft) (bt:make-lock (format nil "RAFT ~A LOCK" (raft-id raft))))
 
-  ;; start the timers to expire randomly within the next broadcast-timeout
+  ;; start the election timer to expire randomly within
+  ;; the next broadcast-timeout
   (let ((starting-at (now))
         (election-timeout (election-timeout raft))
         (broadcast-timeout (broadcast-timeout raft)))
     (setf (election-expires raft) (deadline (- (random broadcast-timeout)
                                                election-timeout)
                                             starting-at)
-          (broadcast-expires raft) (deadline (- (random broadcast-timeout)
-                                                broadcast-timeout)
+          (broadcast-expires raft) (deadline (- broadcast-timeout)
                                              starting-at))))
 
 (defun make-raft-server (id

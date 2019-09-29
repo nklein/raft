@@ -2,15 +2,16 @@
 
 (in-package #:raft-test)
 
+(defmethod raft-id ((p peer))
+  (raft-id (server p)))
+
 (defun prepare-peers (n server-loop)
   (let ((peers (loop :for id :from 1 :to n
                   :for peer := (make-peer id)
                   :collecting peer)))
     (loop :for peer :in peers
        :do (setf (peers (server peer))
-                 (mapcar (lambda (p)
-                           (raft-id (server peer)))
-                         (remove peer peers)))
+                 (mapcar #'raft-id (remove peer peers)))
        :do (start peer server-loop))
     peers))
 
